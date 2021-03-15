@@ -1,39 +1,50 @@
-package com.hellochemo.restservice;
+package com.hellochemo.ui;
 
 import java.util.Date;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.hellochemo.business.bean.EmployeeBean;
 import com.hellochemo.service.EmployeeService;
-import com.hellochemo.service.EmployeeServiceImpl;
 
-@RestController
-public class MainController {
-	
-	@GetMapping("/main")
-	public EmployeeServiceImpl doSomething(@RequestParam(value="name", defaultValue="New Employee") String name, @RequestParam(value="post", defaultValue="New Post") String post, @RequestParam(value="salary", defaultValue="100") double salary) {
-		EmployeeService employeeService=null;
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("com/hellochemo/resources/cst-main-config.xml");
-		employeeService = (EmployeeService) applicationContext.getBean("employeeServiceImpl");
+@SuppressWarnings("resource")
+public class UITester {
+
+	public static void main(String[] args) {
 		
-		// 1 Add Employee
-		addEmployee(employeeService, name, post, salary);
-		return (EmployeeServiceImpl) employeeService;
+		EmployeeService employeeService=null;
+		try{
+			
+			ApplicationContext applicationContext = new ClassPathXmlApplicationContext("com/accenture/lkm/resources/cst-main-config.xml");
+			employeeService = (EmployeeService) applicationContext.getBean("employeeServiceImpl");
+			
+			// 1 Add Employee
+			addEmployee(employeeService);
+			
+			// 2 Get Employee Employee
+			//getEmployeeDetails(employeeService);
+			
+			
+			//3 Update Employee
+			//updateEmployeeDetails(employeeService);
+			
+			//4 Delete Employee
+			//deleteEmployee(employeeService);
+		
+		
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
-	
-	
-	public static void addEmployee(EmployeeService serviceImpl, String name, String post, double salary) {
+
+	public static void addEmployee(EmployeeService serviceImpl) {
 
 		EmployeeBean bean = new EmployeeBean();
 		bean.setInsertTime(new Date());
-		bean.setName(name);
-		bean.setRole(post);
-		bean.setSalary(salary);
+		bean.setName("New Employee");
+		bean.setRole("Sr.Analyst");
+		bean.setSalary(10.0);
 		try {
 
 			int id = serviceImpl.addEmployee(bean);
@@ -124,5 +135,4 @@ public class MainController {
 			System.out.println(e.getMessage());
 		}
 	}
-	
 }
